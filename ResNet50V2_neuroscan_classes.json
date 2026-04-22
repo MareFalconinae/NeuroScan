@@ -1,0 +1,11 @@
+{
+  "class_names": [
+    "glioma",
+    "meningioma",
+    "notumor",
+    "pituitary"
+  ],
+  "test_accuracy": 0.9456250071525574,
+  "test_loss": 0.34783244132995605,
+  "dataset": "masoudnickparvar/brain-tumor-mri-dataset"
+}
