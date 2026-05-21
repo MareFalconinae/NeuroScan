@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pycache
+
+# Environment — keep example, ignore real
+.env
+!.env.example
+
+# Uploads (runtime files)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
