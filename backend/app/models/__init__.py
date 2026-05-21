@@ -1,1 +1,1 @@
-from .scan import User, Scan, TumorClass
+from .scan import User, Scan, TumorClass, PendingRegistration

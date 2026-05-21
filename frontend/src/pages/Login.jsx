@@ -27,6 +27,10 @@ export default function Login() {
       await login({ email, password });
       navigate(from, { replace: true });
     } catch (err) {
+      if (err.status === 403) {
+        navigate('/verify-email', { state: { email }, replace: true });
+        return;
+      }
       setError(err.message || 'Login failed');
       setErrorType(err.status === 404 ? 'info' : 'error');
     } finally {

@@ -57,5 +57,19 @@ class ScanListItem(BaseModel):
 
 
 class MessageResponse(BaseModel):
-    message: str    
-    
+    message: str
+
+
+class PendingVerificationResponse(BaseModel):
+    message: str
+    email: str
+
+
+class VerifyEmailRequest(BaseModel):
+    email: EmailStr
+    code: str = Field(..., min_length=6, max_length=6, pattern=r"^\d{6}$")
+
+
+class ResendVerificationRequest(BaseModel):
+    email: EmailStr
+

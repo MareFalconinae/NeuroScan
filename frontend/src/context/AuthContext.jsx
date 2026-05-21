@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../api.js';
 
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -24,9 +25,15 @@ export function AuthProvider({ children }) {
     return data.user;
   }
 
-  //register
+  //register — no tokens issued until email verified
   async function register(payload) {
     const data = await auth.register(payload);
+    return data;
+  }
+
+  //verify email — sets user after successful verification
+  async function verifyEmail(payload) {
+    const data = await auth.verifyEmail(payload);
     setUser(data.user);
     return data.user;
   }
@@ -54,7 +61,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  const value = { user, loading, login, register, logout, deleteAccount, updateUsername };
+  const value = { user, loading, login, register, verifyEmail, logout, deleteAccount, updateUsername };
 
   return (
     <AuthContext.Provider value={value}>

@@ -27,6 +27,13 @@ class Settings(BaseSettings):
 
     FRONTEND_URLS: str = "http://localhost:5173,http://localhost:3000"
 
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    EMAIL_FROM: str = ""
+    VERIFICATION_CODE_EXPIRE_MINUTES: int = 15
+
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
         env_file_encoding="utf-8",

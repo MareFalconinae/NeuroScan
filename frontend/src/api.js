@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const REQUEST_TIMEOUT_MS = 15000;
 
 //fetch wrapper
@@ -34,7 +34,11 @@ async function request(path, options = {}) {
     }
 
     const contentType = response.headers.get('content-type') || '';
-    if (!contentType.includes('application/json')) return null;
+    if (!contentType.includes('application/json')) {
+      const err = new Error(`Unexpected non-JSON response from ${path}`);
+      err.status = response.status;
+      throw err;
+    }
     return response.json();
   } catch (err) {
     if (err.name === 'AbortError') throw new Error('İstek zaman aşımına uğradı');
@@ -64,6 +68,16 @@ export const auth = {
   deleteAccount: () => request('/auth/me', { method: 'DELETE' }),
 
   updateUsername: (data) => request('/auth/me', { method: 'PATCH', body: JSON.stringify(data) }),
+
+  verifyEmail: (data) => request('/auth/verify-email', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+
+  resendVerification: (data) => request('/auth/resend-verification', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
 };
 
 //SCANS

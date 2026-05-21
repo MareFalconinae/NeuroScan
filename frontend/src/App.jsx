@@ -6,6 +6,7 @@ import Header from './components/Header.jsx';
 import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import VerifyEmail from './pages/VerifyEmail.jsx';
 import Scan from './pages/Scan.jsx';
 import History from './pages/History.jsx';
 import ScanDetail from './pages/ScanDetail.jsx';
@@ -29,6 +30,7 @@ function AppShell() {
         <Route path="/" element={<PublicOnlyRoute><Landing /></PublicOnlyRoute>} />
         <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
         <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         {/* Protected Routes */}
         <Route path="/scan" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />

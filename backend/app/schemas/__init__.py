@@ -7,4 +7,7 @@ from .scan import (
     ScanResponse,
     ScanListItem,
     MessageResponse,
+    PendingVerificationResponse,
+    VerifyEmailRequest,
+    ResendVerificationRequest,
 )

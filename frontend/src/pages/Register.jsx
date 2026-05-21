@@ -37,7 +37,7 @@ export default function Register() {
     setLoading(true);
     try {
       await register({ email, username, password });
-      navigate('/scan', { replace: true });
+      navigate('/verify-email', { state: { email }, replace: true });
     } catch (err) {
       setError(err.message || 'Registration failed');
     } finally {
@@ -71,7 +71,7 @@ export default function Register() {
               type="text"
               required
               minLength={3}
-              maxLength={30}
+              maxLength={32}
               pattern="[a-zA-Z0-9_À-ſ]+"
               title="3-30 karakter, harf/rakam/alt çizgi (Türkçe harfler dahil)"
               value={username}
