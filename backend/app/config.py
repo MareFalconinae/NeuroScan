@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"
     MAX_FILE_SIZE_MB: int = 10
 
-    MODEL_PATH: str = "ml/ResNet50V2_neuroscan.keras"
-    CLASSES_PATH: str = "ml/ResNet50V2_neuroscan_classes.json"
+    MODEL_PATH: str = "models/ResNet50V2_neuroscan.keras"
+    CLASSES_PATH: str = "models/ResNet50V2_neuroscan_classes.json"
 
     FRONTEND_URLS: str = "http://localhost:5173,http://localhost:3000"
 

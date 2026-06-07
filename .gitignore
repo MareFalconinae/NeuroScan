@@ -16,3 +16,6 @@ backend/uploads/*
 # Frontend build artifacts
 frontend/dist/
 frontend/node_modules/
+
+# ML model weights (download separately, see README)
+backend/models/*.keras

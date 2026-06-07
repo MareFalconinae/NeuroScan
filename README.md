@@ -57,9 +57,24 @@ alembic upgrade head
 
 ### 5. ML model dosyaları
 
-`backend/ml/` klasörüne ekle:
-- `ResNet50V2_neuroscan.keras`
-- `ResNet50V2_neuroscan_classes.json` → `{ "class_names": ["glioma", "meningioma", "notumor", "pituitary"] }`
+`ResNet50V2_neuroscan_classes.json` repoda mevcut (`backend/models/`). Ağırlık dosyası (~360 MB) boyutu nedeniyle repoya eklenmedi — Google Drive'dan indirip aynı klasöre koy:
+
+1. Şu linkten indir: `<GOOGLE_DRIVE_LINK_BURAYA>`
+2. İndirilen `ResNet50V2_neuroscan.keras` dosyasını `backend/models/` klasörüne taşı.
+
+Komut satırından (gdown ile):
+
+```powershell
+pip install gdown
+gdown --id <GOOGLE_DRIVE_FILE_ID> -O backend/models/ResNet50V2_neuroscan.keras
+```
+
+Sonuç klasör yapısı:
+```
+backend/models/
+├── ResNet50V2_neuroscan.keras
+└── ResNet50V2_neuroscan_classes.json
+```
 
 ---
 
