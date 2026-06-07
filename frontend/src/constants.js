@@ -7,4 +7,4 @@ export const CLASS_INFO = {
 };
 
 //announcement
-export const DISCLAIMER = '!!! This tool is an academic demo project. It does not replace real treatment or diagnosis !!!';
+export const DISCLAIMER = 'This tool is an academic demo project and does not replace professional medical diagnosis or treatment. Note: it may produce incorrect results for glioma cases and for non-grayscale MRI inputs.';
