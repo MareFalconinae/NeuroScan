@@ -60,7 +60,8 @@ alembic upgrade head
 `ResNet50V2_neuroscan_classes.json` repoda mevcut (`backend/models/`). Ağırlık dosyası (~360 MB) boyutu nedeniyle repoya eklenmedi — Google Drive'dan indirip aynı klasöre koy:
 
 1. Şu linkten indir: `https://drive.google.com/file/d/1irGd9QFwyjow4zpdYU2Al9pJFWnxVrrv/view?usp=sharing`
-2. İndirilen `ResNet50V2_neuroscan.keras` dosyasını `backend/models/` klasörüne taşı.
+2. İndirilen `ResNet50V2_neuroscan.keras` dosyasını `backend/models/` klasörüne taşı. 
+Ek. Modeli eğitmek için kullandığım Colab dosyasına buradan ulaşabilirsiniz: `https://colab.research.google.com/drive/1aHdov1PCUrlA33ZAMy8CK2dFbosJwQWi?usp=sharing`
 
 Komut satırından (gdown ile):
 
