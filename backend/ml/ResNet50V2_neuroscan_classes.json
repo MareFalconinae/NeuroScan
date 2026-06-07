@@ -5,7 +5,44 @@
     "notumor",
     "pituitary"
   ],
-  "test_accuracy": 0.9456250071525574,
-  "test_loss": 0.34783244132995605,
-  "dataset": "masoudnickparvar/brain-tumor-mri-dataset"
+  "test_accuracy": 0.95,
+  "test_loss": 0.43452969193458557,
+  "macro_auc": 0.9848348958333335,
+  "per_class_metrics": {
+    "glioma": {
+      "precision": 0.9969325153374233,
+      "recall": 0.8125,
+      "f1": 0.8953168044077136,
+      "auc": 0.9469770833333334
+    },
+    "meningioma": {
+      "precision": 0.8901345291479821,
+      "recall": 0.9925,
+      "f1": 0.9385342789598109,
+      "auc": 0.9937645833333334
+    },
+    "notumor": {
+      "precision": 0.9478672985781991,
+      "recall": 1.0,
+      "f1": 0.9732360097323601,
+      "auc": 0.9993916666666667
+    },
+    "pituitary": {
+      "precision": 0.9802955665024631,
+      "recall": 0.995,
+      "f1": 0.9875930521091811,
+      "auc": 0.9992062500000001
+    }
+  },
+  "class_weights": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0
+  },
+  "dataset": "masoudnickparvar/brain-tumor-mri-dataset",
+  "phase1_epochs": 10,
+  "phase2_epochs": 17,
+  "phase1_lr": 0.001,
+  "phase2_lr": 1e-05
 }

@@ -1,7 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const REQUEST_TIMEOUT_MS = 15000;
 
-//fetch wrapper
 async function request(path, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -48,8 +47,6 @@ async function request(path, options = {}) {
   }
 }
 
-//AUTH
-
 export const auth = {
   register: (data) => request('/auth/register', {
     method: 'POST',
@@ -80,8 +77,6 @@ export const auth = {
   }),
 };
 
-//SCANS
-
 export const scans = {
   predict: (file) => {
     const formData = new FormData();
@@ -98,6 +93,5 @@ export const scans = {
 
   delete: (scanId) => request(`/scans/${scanId}`, { method: 'DELETE' }),
 
-  //download pdf
   reportUrl: (scanId) => `${API_URL}/scans/${scanId}/report`,
 };

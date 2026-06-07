@@ -40,7 +40,6 @@ class User(Base):
 
     scans = relationship("Scan", back_populates="user", cascade="all, delete-orphan")
 
-    #---
     def __repr__(self):
         return f"<User {self.username} ({self.email})>"
 
@@ -87,6 +86,5 @@ class Scan(Base):
 
     user = relationship("User", back_populates="scans")
 
-    #---
     def __repr__(self):
         return f"<Scan {self.scan_id} {self.tumor_class}>"

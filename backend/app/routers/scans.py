@@ -35,7 +35,6 @@ ALLOWED_TYPES = {"image/jpeg", "image/jpg", "image/png"}
 IMG_SIZE = (224, 224)
 
 
-#process image
 def _preprocess_image(image_bytes: bytes) -> np.ndarray:
     try:
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
@@ -47,7 +46,6 @@ def _preprocess_image(image_bytes: bytes) -> np.ndarray:
     return preprocess_input(arr)
 
 
-#get scan
 def _get_scan_or_404(scan_id: uuid.UUID, user_id, db: Session) -> Scan:
     scan = db.execute(
         select(Scan).where(
@@ -61,7 +59,6 @@ def _get_scan_or_404(scan_id: uuid.UUID, user_id, db: Session) -> Scan:
     return scan
 
 
-#predict
 @router.post("/predict", response_model=ScanResponse, status_code=status.HTTP_201_CREATED)
 async def predict_scan(
     file: UploadFile = File(...),
@@ -118,7 +115,6 @@ async def predict_scan(
     return ScanResponse.model_validate(scan)
 
 
-#order by date
 @router.get("/", response_model=list[ScanListItem])
 def list_scans(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     scans = db.scalars(
@@ -129,7 +125,6 @@ def list_scans(current_user: User = Depends(get_current_user), db: Session = Dep
     return [ScanListItem.model_validate(s) for s in scans]
 
 
-#scan details
 @router.get("/{scan_id}", response_model=ScanResponse)
 def get_scan(
     scan_id: uuid.UUID,
@@ -139,7 +134,6 @@ def get_scan(
     return ScanResponse.model_validate(_get_scan_or_404(scan_id, current_user.user_id, db))
 
 
-#delete scan
 @router.delete("/{scan_id}", response_model=MessageResponse)
 def delete_scan(
     scan_id: uuid.UUID,
@@ -153,7 +147,6 @@ def delete_scan(
     return MessageResponse(message="Tarama silindi")
 
 
-#download pdf report
 @router.get(
     "/{scan_id}/report",
     responses={

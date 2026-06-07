@@ -47,12 +47,11 @@ def _generate_verification_code() -> tuple[str, datetime]:
     return code, expires_at
 
 
-#register — saves to pending_registrations, NOT users table
 @router.post("/register", response_model=PendingVerificationResponse, status_code=status.HTTP_201_CREATED)
 def register(body: UserRegister, db: Session = Depends(get_db)):
     email = body.email.lower()
 
-    # username taken by active user
+    # check active username conflict
     if db.execute(
         select(User).where(
             func.lower(User.username) == func.lower(body.username),
@@ -61,20 +60,20 @@ def register(body: UserRegister, db: Session = Depends(get_db)):
     ).scalar_one_or_none():
         raise HTTPException(status.HTTP_409_CONFLICT, "Bu kullanici adi zaten alinmis")
 
-    # email taken by active user
+    # check active email conflict
     if db.execute(
         select(User).where(User.email == email, User.deleted_at.is_(None))
     ).scalar_one_or_none():
         raise HTTPException(status.HTTP_409_CONFLICT, "Bu e-posta zaten kayitli")
 
-    # clean up soft-deleted user with same email
+    # remove soft-deleted user with same email
     deleted = db.execute(
         select(User).where(User.email == email, User.deleted_at.isnot(None))
     ).scalar_one_or_none()
     if deleted:
         db.delete(deleted)
 
-    # upsert pending registration (replace expired or new)
+    # remove existing pending row for same email
     existing_pending = db.execute(
         select(PendingRegistration).where(PendingRegistration.email == email)
     ).scalar_one_or_none()
@@ -105,7 +104,6 @@ def register(body: UserRegister, db: Session = Depends(get_db)):
     )
 
 
-#verify email — creates real user only after correct code
 @router.post("/verify-email", response_model=TokenResponse)
 def verify_email(body: VerifyEmailRequest, response: Response, db: Session = Depends(get_db)):
     email = body.email.lower()
@@ -125,7 +123,7 @@ def verify_email(body: VerifyEmailRequest, response: Response, db: Session = Dep
     if pending.verification_code != body.code:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Hatali dogrulama kodu")
 
-    # final username conflict check (race condition guard)
+    # check username conflict again before creating user
     if db.execute(
         select(User).where(
             func.lower(User.username) == func.lower(pending.username),
@@ -156,7 +154,6 @@ def verify_email(body: VerifyEmailRequest, response: Response, db: Session = Dep
     return TokenResponse(user=UserResponse.model_validate(new_user), message="Email dogrulandi, giris yapildi")
 
 
-#resend verification
 @router.post("/resend-verification", response_model=PendingVerificationResponse)
 def resend_verification(body: ResendVerificationRequest, db: Session = Depends(get_db)):
     email = body.email.lower()
@@ -166,14 +163,13 @@ def resend_verification(body: ResendVerificationRequest, db: Session = Depends(g
     ).scalar_one_or_none()
 
     if not pending:
-        # don't reveal whether email exists
         return PendingVerificationResponse(message="Dogrulama kodu gonderildi", email=email)
 
     last_sent = pending.expires_at - timedelta(minutes=settings.VERIFICATION_CODE_EXPIRE_MINUTES)
     if datetime.now(timezone.utc) - last_sent < timedelta(seconds=60):
         raise HTTPException(
             status.HTTP_429_TOO_MANY_REQUESTS,
-            "Cok sikli deniyorsunuz. 1 dakika bekleyin.",
+            "Çok sıkı deniyorsunuz. 1 dakika bekleyin.",
         )
 
     code, expires_at = _generate_verification_code()
@@ -189,7 +185,6 @@ def resend_verification(body: ResendVerificationRequest, db: Session = Depends(g
     return PendingVerificationResponse(message="Yeni dogrulama kodu gonderildi", email=email)
 
 
-#login
 @router.post("/login", response_model=TokenResponse)
 def login(body: UserLogin, response: Response, db: Session = Depends(get_db)):
     any_user = db.execute(
@@ -212,27 +207,23 @@ def login(body: UserLogin, response: Response, db: Session = Depends(get_db)):
     return TokenResponse(user=UserResponse.model_validate(any_user), message="Giris basarili")
 
 
-#logout
 @router.post("/logout", response_model=MessageResponse)
 def logout(response: Response):
     clear_auth_cookies(response)
     return MessageResponse(message="Cikis yapildi")
 
 
-#profile
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
     return UserResponse.model_validate(current_user)
 
 
-#refresh_session
 @router.post("/refresh", response_model=MessageResponse)
 def refresh_tokens(response: Response, user: User = Depends(get_user_from_refresh)):
     issue_auth_tokens(response, user.user_id)
     return MessageResponse(message="Token yenilendi")
 
 
-#change username
 @router.patch("/me", response_model=UserResponse)
 def update_username(
     body: UpdateUsernameRequest,
@@ -256,7 +247,6 @@ def update_username(
     return UserResponse.model_validate(current_user)
 
 
-#delete account
 @router.delete("/me", response_model=MessageResponse)
 def delete_account(
     response: Response,
